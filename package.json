@@ -1,0 +1,9 @@
+{
+  "name": "tightrope",
+  "version": "0.0.1",
+  "description": "TCP layer load balancer",
+  "main": "index.js",
+  "repository": "git@github.com:areyoureddy/tightrope",
+  "author": "Adithya Reddy <adithyakreddy6@gmail.com>",
+  "license": "MIT"
+}

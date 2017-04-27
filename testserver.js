@@ -12,7 +12,7 @@ app.get('/hello', (req, res) => {
   res.send('/hello');
 });
 
-app.listen(8080, () => {
+app.listen(process.argv[2], () => {
   console.log('Test Server');
-  console.log('Listening at localhost:8080');
+  console.log('Listening at localhost:' + process.argv[2]);
 });

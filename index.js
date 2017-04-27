@@ -2,13 +2,22 @@ const net = require('net');
 
 const config = require('./config');
 
+let index = 0;
+const num_workers = config.to.length;
+
 const server = net.createServer((fromSocket) => {
   console.log('Client connected');
 
   const toSocket = net.createConnection({
-    host: config.to.host,
-    port: config.to.port
+    host: config.to[index].host,
+    port: config.to[index].port
   });
+
+  if (index < num_workers - 1) {
+    index += 1;
+  } else {
+    index = 0;
+  }
 
   fromSocket.pipe(toSocket);
   toSocket.pipe(fromSocket);
@@ -32,6 +41,4 @@ const server = net.createServer((fromSocket) => {
 
 server.listen(config.from.port, () => {
   console.log('Reverse proxy');
-  console.log(config.from.host + ':' + config.from.port +
-    ' -> ' + config.to.host + ':' + config.to.port);
 });

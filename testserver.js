@@ -1,13 +1,18 @@
-const http = require('http');
+const express = require('express');
 
-const server = http.createServer((req, res) => {
-  console.log('Received request');
+const app = express();
 
-  res.write('Test Response');
-  res.end();
+app.get('/', (req, res) => {
+  console.log('Received request at /');
+  res.send('/');
 });
 
-server.listen(8080, () => {
+app.get('/hello', (req, res) => {
+  console.log('Received request at /hello');
+  res.send('/hello');
+});
+
+app.listen(8080, () => {
   console.log('Test Server');
   console.log('Listening at localhost:8080');
 });

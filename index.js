@@ -17,8 +17,16 @@ const server = net.createServer((fromSocket) => {
     console.log('Client disconnected');
   });
 
+  fromSocket.on('close', () => {
+    console.log('Client socket has closed.');
+  });
+
   toSocket.on('end', () => {
     console.log('Server disconnected');
+  });
+
+  toSocket.on('close', () => {
+    console.log('Server socket has closed.');
   });
 });
 

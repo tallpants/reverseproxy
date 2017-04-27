@@ -5,5 +5,8 @@
   "main": "index.js",
   "repository": "git@github.com:areyoureddy/tightrope",
   "author": "Adithya Reddy <adithyakreddy6@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.15.2"
+  }
 }

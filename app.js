@@ -1,3 +1,5 @@
+// TODO: Handle servers going down or not responding
+
 const net = require('net');
 const fs = require('fs');
 let config = null;
@@ -7,8 +9,11 @@ if (fs.existsSync('config.json')) {
   config = JSON.parse(fileContents);
 }
 
+// TODO: Programmatic configuration
+
 if (!config) {
-  console.log('config.json not found');
+  console.error('Not configured');
+  process.exit(1);
 }
 
 let balancer = {};
@@ -29,6 +34,11 @@ switch(balanceMode) {
     balancer.index = 0;
     balancer.num_workers = config.to.length;
     break;
+
+  case 'leastConnected':
+    
+    break;
+
   default:
     console.error('Unrecognizable balance mode');
     process.exit(1);

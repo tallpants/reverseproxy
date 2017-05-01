@@ -16,27 +16,22 @@ if (!config) {
   process.exit(1);
 }
 
-let balancer = {};
-
 let {balanceMode} = config;
+
+let balancer = {};
+balancer.num_workers = config.to.length;
 
 if (!balanceMode) {
   balanceMode = 'roundRobin';
 }
 
-if (balanceMode == 'roundRobin') {
-  balancer.index = 0;
-  balancer.num_workers = config.to.length;
-}
-
-switch(balanceMode) {
+switch (balanceMode) {
   case 'roundRobin':
     balancer.index = 0;
-    balancer.num_workers = config.to.length;
     break;
 
   case 'leastConnected':
-    
+    balancer.connectionCount = new Array(balancer.num_workers).fill(0);
     break;
 
   default:
@@ -47,23 +42,42 @@ switch(balanceMode) {
 const server = net.createServer((fromSocket) => {
   console.log('Client connected');
 
-  if (balanceMode == 'roundRobin') {
+  let toHost;
+  let toPort;
 
-    toSocket = net.createConnection({
-      host: config.to[balancer.index].host,
-      port: config.to[balancer.index].port
-    });
+  switch (balanceMode) {
 
-    if (balancer.index < balancer.num_workers - 1) {
-      balancer.index += 1;
-    } else {
-      balancer.index = 0;
-    }
-  }  
+    case 'roundRobin':
+      toHost = config.to[balancer.index].host;
+      toport = config.to[balancer.index].port;
+
+      if (balancer.index < balancer.num_workers - 1) {
+        balancer.index += 1;
+      } else {
+        balancer.index = 0;
+      }
+
+      break;
+    
+    case 'leastConnected':
+      let leastConnectionCount = Math.min.apply(Math, balancer.connectionCount);
+      let leastConnectionIndex = balancer.connectionCount.indexOf(leastConnectionCount);
+
+      toHost = config.to[leastConnectionIndex].host;
+      toPort = config.to[leastConnectionIndex].port;
+
+      balancer.connectionCount[leastConnectionIndex] += 1;
+  }
+
+  const toSocket = net.createConnection({
+    host: toHost,
+    port: toPort
+  });
 
   fromSocket.pipe(toSocket);
   toSocket.pipe(fromSocket);
 
+  // TODO: Decrement connectionCount in leastConnected balancing mode??
   fromSocket.on('end', () => {
     console.log('Client disconnected');
   });

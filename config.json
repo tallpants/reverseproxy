@@ -1,5 +1,6 @@
 {
   "listenPort": "3000",
+  "balanceMode": "leastConnected",
   "to": [
     {
       "host": "localhost",

@@ -24,6 +24,16 @@ if (balanceMode == 'roundRobin') {
   balancer.num_workers = config.to.length;
 }
 
+switch(balanceMode) {
+  case 'roundRobin':
+    balancer.index = 0;
+    balancer.num_workers = config.to.length;
+    break;
+  default:
+    console.error('Unrecognizable balance mode');
+    process.exit(1);
+}
+
 const server = net.createServer((fromSocket) => {
   console.log('Client connected');
 
@@ -55,5 +65,6 @@ const server = net.createServer((fromSocket) => {
 
 server.listen(config.listenPort, () => {
   console.log('Reverse proxy');
+  console.log('Balance mode: ' + balanceMode);
   console.log('Listening at port ' + config.listenPort);
 });

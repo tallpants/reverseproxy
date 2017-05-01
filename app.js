@@ -83,7 +83,6 @@ const server = net.createServer((fromSocket) => {
   fromSocket.pipe(toSocket);
   toSocket.pipe(fromSocket);
 
-  // TODO: Decrement connectionCount in leastConnected balancing mode??
   fromSocket.on('end', () => {
     console.log('Client disconnected');
   });
@@ -94,6 +93,21 @@ const server = net.createServer((fromSocket) => {
       balancer.connectionCount[toSocket.index] -= 1;
     }
   });
+
+  // TODO: Send connection to another server instead
+  // TODO: Mark the server as unreachable and don't check it for a while
+  toSocket.on('error', () => {
+    console.error('Server not reachable. Closing connection');
+    toSocket.end();
+    fromSocket.end();
+  });
+
+  fromSocket.on('error', () => {
+    console.error('Client not reachable. Closing connection');
+    toSocket.end();
+    fromSocket.end();
+  });
+
 });
 
 server.listen(config.listenPort, () => {

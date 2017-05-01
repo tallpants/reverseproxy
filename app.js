@@ -44,6 +44,7 @@ const server = net.createServer((fromSocket) => {
 
   let toHost;
   let toPort;
+  let index; // Used for least connected load balancing only
 
   switch (balanceMode) {
 
@@ -63,6 +64,7 @@ const server = net.createServer((fromSocket) => {
       let leastConnectionCount = Math.min.apply(Math, balancer.connectionCount);
       let leastConnectionIndex = balancer.connectionCount.indexOf(leastConnectionCount);
 
+      index = leastConnectionIndex;
       toHost = config.to[leastConnectionIndex].host;
       toPort = config.to[leastConnectionIndex].port;
 
@@ -74,6 +76,10 @@ const server = net.createServer((fromSocket) => {
     port: toPort
   });
 
+  if (balanceMode == 'leastConnected') {
+    toSocket.index = index;
+  }
+
   fromSocket.pipe(toSocket);
   toSocket.pipe(fromSocket);
 
@@ -84,6 +90,9 @@ const server = net.createServer((fromSocket) => {
 
   toSocket.on('end', () => {
     console.log('Server disconnected');
+    if (balanceMode == 'leastConnected') {
+      balancer.connectionCount[toSocket.index] -= 1;
+    }
   });
 });
 

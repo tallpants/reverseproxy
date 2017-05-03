@@ -23,6 +23,7 @@ if (!balanceMode) {
   balanceMode = 'roundRobin';
 }
 
+// Initializing the balancer object based on the balancing mode
 switch (balanceMode) {
   case 'roundRobin':
     balancer.index = 0;

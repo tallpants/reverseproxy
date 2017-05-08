@@ -49,7 +49,7 @@ const server = net.createServer((fromSocket) => {
 
     case 'roundRobin':
       toHost = config.to[balancer.index].host;
-      toport = config.to[balancer.index].port;
+      toPort = config.to[balancer.index].port;
 
       if (balancer.index < balancer.num_workers - 1) {
         balancer.index += 1;
@@ -75,7 +75,7 @@ const server = net.createServer((fromSocket) => {
     port: toPort
   });
 
-  if (balanceMode == 'leastConnected') {
+  if (balanceMode === 'leastConnected') {
     toSocket.index = index;
   }
 
@@ -88,7 +88,7 @@ const server = net.createServer((fromSocket) => {
 
   toSocket.on('end', () => {
     console.log('Server disconnected');
-    if (balanceMode == 'leastConnected') {
+    if (balanceMode === 'leastConnected') {
       balancer.connectionCount[toSocket.index] -= 1;
     }
   });

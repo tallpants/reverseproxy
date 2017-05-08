@@ -1,5 +1,6 @@
 const net = require('net');
 const fs = require('fs');
+
 let config = null;
 
 if (fs.existsSync('config.json')) {
@@ -14,7 +15,7 @@ if (!config) {
   process.exit(1);
 }
 
-let {balanceMode} = config;
+let { balanceMode } = config;
 
 let balancer = {};
 balancer.num_workers = config.to.length;

@@ -58,7 +58,7 @@ const server = net.createServer((fromSocket) => {
       }
 
       break;
-    
+
     case 'leastConnected':
       let leastConnectionCount = Math.min.apply(Math, balancer.connectionCount);
       let leastConnectionIndex = balancer.connectionCount.indexOf(leastConnectionCount);

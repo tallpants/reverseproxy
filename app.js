@@ -95,7 +95,6 @@ const server = net.createServer((fromSocket) => {
   });
 
   toSocket.on('error', () => {
-    // TODO: Mark the server as unreachable and don't check it for a while???
     console.error('Server not reachable. Closing connection');
     toSocket.end();
     fromSocket.end();

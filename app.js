@@ -1,31 +1,5 @@
 const net = require('net');
 const fs = require('fs');
-const { EventEmitter } = require('events');
-
-class ReverseProxy extends EventEmitter {
-
-  config;
-
-  constructor(configArg) {
-
-    // If a config object isn't passed as an argument then try
-    // and use a config.json file.
-    if (!configArg) {
-      if (fs.existsSync('config.json')) {
-        const fileContents = fs.readFileSync('config.json');
-        config = JSON.parse(fileContents);
-      } else {
-        throw new Error('Reverse proxy configuration missing');
-      }
-    } else {
-      config = configArg;
-    }
-
-
-  }
-
-}
-
 
 let config = null;
 
